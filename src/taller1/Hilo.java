@@ -1,4 +1,4 @@
-package src;
+package taller1;
 public class Hilo extends Thread {
 	private static int[][] M; // La matriz que se desea sumar
 	private static int total = 0; // El total de la suma

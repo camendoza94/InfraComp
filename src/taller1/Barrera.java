@@ -1,4 +1,4 @@
-package src;
+package taller1;
 
 public class Barrera {
 	private int n;
@@ -38,26 +38,26 @@ public class Barrera {
 	}
 	
 	
-	public void reservar2(int k){
-		P(mutex);
-		while(k>n){
-			enEsperar++;
-			V(m);
-			P(s);
-			P(m);
-		}
-		V(mutex);
-	}
-	
-	public void liberar2(int k){
-		P(mutex);
-		n+=k;
-		while(enEspera > 0){
-			enEspera--;
-			V(s);			
-		}
-		V(mutex)
-	}
-	
+//	public void reservar2(int k){
+//		P(mutex);
+//		while(k>n){
+//			enEsperar++;
+//			V(m);
+//			P(s);
+//			P(m);
+//		}
+//		V(mutex);
+//	}
+//	
+//	public void liberar2(int k){
+//		P(mutex);
+//		n+=k;
+//		while(enEspera > 0){
+//			enEspera--;
+//			V(s);			
+//		}
+//		V(mutex)
+//	}
+//	
 	
 }
