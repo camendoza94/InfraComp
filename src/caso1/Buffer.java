@@ -36,7 +36,6 @@ public class Buffer {
 	}
 	
 	public boolean hasClients(){
-		System.out.println("Clients count" + clients);
 		return clients.get() > 0;
 	}
 }
