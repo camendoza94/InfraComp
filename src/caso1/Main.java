@@ -16,7 +16,7 @@ public class Main {
 			int capacidadBuffer = Integer.parseInt(p.getProperty("capacidadBuffer"));
 			int numServidores = Integer.parseInt(p.getProperty("numServidores"));
 
-			Buffer buffer = new Buffer(capacidadBuffer);
+			Buffer buffer = new Buffer(capacidadBuffer, numClientes);
 			for (int i = 0; i < numServidores; i++) {
 				new Server(buffer).start();
 			}

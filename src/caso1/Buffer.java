@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class Buffer {
 	private int capacity;
 	private ArrayList<Message> messages;
+	private int clients;
 	
-	public Buffer(int capacity){
+	public Buffer(int capacity, int clients){
 		this.capacity = capacity;
+		this.clients = clients;
 		messages = new ArrayList<Message>();
 	}
 	
