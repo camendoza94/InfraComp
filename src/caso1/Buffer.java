@@ -1,13 +1,14 @@
 package caso1;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Buffer {
 	private int capacity;
 	private ArrayList<Message> messages;
-	private int clients;
+	private AtomicInteger clients;
 	
-	public Buffer(int capacity, int clients){
+	public Buffer(int capacity, AtomicInteger clients){
 		this.capacity = capacity;
 		this.clients = clients;
 		messages = new ArrayList<Message>();
@@ -30,11 +31,12 @@ public class Buffer {
 		return false;
 	}
 	
-	public synchronized void clientCompleted(){
-		clients--;
+	public void clientCompleted(){
+		clients.decrementAndGet();
 	}
 	
 	public boolean hasClients(){
-		return clients > 0;
+		System.out.println("Clients count" + clients);
+		return clients.get() > 0;
 	}
 }
