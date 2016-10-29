@@ -1,8 +1,9 @@
 package taller1;
 
-public class Semaforo {
+public class BarreraSemaforo {
 	public int cont = 0;
 	public int nThreads;
+	int mutex = 1;
 //	public void sincronizarBarrera(){
 //		P(mutex);
 //		nThreads++;
