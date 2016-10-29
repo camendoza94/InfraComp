@@ -29,4 +29,12 @@ public class Buffer {
 		}
 		return false;
 	}
+	
+	public synchronized void clientCompleted(){
+		clients--;
+	}
+	
+	public boolean hasClients(){
+		return clients > 0;
+	}
 }
