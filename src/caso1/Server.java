@@ -7,7 +7,7 @@ public class Server extends Thread{
 	}
 
 	public void run() {
-		while (true) {
+		while (buffer.hasClients()) {
 			Message m;
 			try {
 				m = buffer.getMessage();

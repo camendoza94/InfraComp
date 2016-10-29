@@ -32,5 +32,6 @@ public class Client extends Thread{
 			}
 			System.out.println("Primero: " + i + " Segundo: " + m.getContent());
 		}
+		buffer.clientCompleted();
 	}
 }
