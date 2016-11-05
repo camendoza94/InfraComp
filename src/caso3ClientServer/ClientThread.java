@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.Socket;
 
-// TODO Server
+// TODO Server (Meter la parte del worker dentro del run)
 public class ClientThread
 extends Thread
 implements Runnable {

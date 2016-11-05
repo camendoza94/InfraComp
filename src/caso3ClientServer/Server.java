@@ -9,6 +9,7 @@ import java.net.Socket;
 
 import caso3ClientServer.ClientThread;
 
+//TODO Mirar la clase Servidor de SerivodorNovasoft y hacer los cambios respectivos
 public class Server {
     private ServerSocket server;
 
