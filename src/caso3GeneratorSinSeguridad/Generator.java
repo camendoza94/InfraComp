@@ -8,11 +8,11 @@ import caso3Core.Task;
 
 public class Generator {
     private LoadGenerator generator;
+	private static final int gapBetweenTasks = 1000;
+	public static final int numberOfTasks = 1;
 
     public Generator() {
         Task work = this.createTask();
-        int numberOfTasks = 1;
-        int gapBetweenTasks = 1000;
         this.generator = new LoadGenerator("Client - Server Load Test", numberOfTasks, work, gapBetweenTasks);
         this.generator.generate();
     }
@@ -22,7 +22,7 @@ public class Generator {
     }
 
     public static /* varargs */ void main(String ... args) {
-        Generator gen = new Generator();
+        new Generator();
     }
 }
 

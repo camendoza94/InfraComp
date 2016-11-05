@@ -20,7 +20,7 @@ public class Client {
 
     public Client() {
         try {
-            this.socket = new Socket("localhost", 4443);
+            this.socket = new Socket("localhost", 4444);
             this.inS = this.socket.getInputStream();
             this.outS = this.socket.getOutputStream();
             this.in = new BufferedReader(new InputStreamReader(this.inS));

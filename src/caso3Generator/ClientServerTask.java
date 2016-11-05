@@ -3,7 +3,11 @@
  */
 package caso3Generator;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -24,9 +28,12 @@ import org.bouncycastle.util.io.pem.PemReader;
 
 import caso3ClientServer.Certificate;
 import caso3ClientServer.Client;
+import caso3ClientServer.Servidor;
 import caso3Core.Task;
 
 public class ClientServerTask extends Task {
+
+	private PrintWriter writer;
 	@Override
 	public void execute() {
 		Client client = new Client();
@@ -36,6 +43,7 @@ public class ClientServerTask extends Task {
 		String[] algoritmos = alg.split(":");
 		long authInitTime = 0;
 		long authEndTime = 0;
+		long authTime = 0;
 
 		X509Certificate certificadoServidor = null;
 		Certificate certificadoCliente = null;
@@ -113,7 +121,7 @@ public class ClientServerTask extends Task {
 				&& fromServer.equals("OK")) {
 			try {
 				authEndTime = System.currentTimeMillis();
-				long authTime = authEndTime - authInitTime;
+				authTime = authEndTime - authInitTime;
 				String algoritmo = (algoritmos[0]);
 				if (algoritmo.equals("DES") || algoritmo.equals("AES"))
 					algoritmo += "/ECB/PKCS5Padding";
@@ -147,6 +155,10 @@ public class ClientServerTask extends Task {
 				client.sendMessageToServer(confirmacion);
 				long queryEndTime = System.currentTimeMillis();
 				long queryTime = queryEndTime - authEndTime;
+				crearWriter();
+				writer.println(authTime + "," + queryTime);
+				writer.close();
+				writer = null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -154,6 +166,19 @@ public class ClientServerTask extends Task {
 			client.sendMessageToServer("OK");
 		}
 		client.sendMessageToServer("EOT");
+	}
+
+	public void crearWriter() throws Exception {
+		if (writer == null) {
+			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +"SS.csv").exists();
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(
+					Servidor.N_THREADS + "threads" + Generator.numberOfTasks +"SS.csv", true));
+			writer = new PrintWriter(buffer);
+
+			if (noExiste)
+				writer.println("Tiempo autenticacion, Tiempo Consulta");
+		}
+
 	}
 
 	public void fail() {

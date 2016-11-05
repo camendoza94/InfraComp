@@ -3,10 +3,17 @@
  */
 package caso3GeneratorSinSeguridad;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import caso3ClientServerSinSeguridad.Client;
+import caso3ClientServerSinSeguridad.Servidor;
 import caso3Core.Task;
 
 public class ClientServerTask extends Task {
+	private PrintWriter writer;
 	@Override
 	public void execute() {
 		Client client = new Client();
@@ -15,6 +22,7 @@ public class ClientServerTask extends Task {
 		String alg = "DES:RSA:HMACMD5";
 		long authInitTime = 0;
 		long authEndTime = 0;
+		long authTime = 0;
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
 			if (fromServer.equals("OK")) {
@@ -24,7 +32,6 @@ public class ClientServerTask extends Task {
 		}
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				authInitTime = System.currentTimeMillis();
 				client.sendMessageToServer("CERTIFICADOCLIENTE");
@@ -32,7 +39,6 @@ public class ClientServerTask extends Task {
 		}
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("CERTIFICADOSERVIDOR")) {
 				client.sendMessageToServer("OK");
 			}
@@ -40,7 +46,6 @@ public class ClientServerTask extends Task {
 
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("CIFRADOKC+")) {
 				client.sendMessageToServer("CIFRADOKS+");
 			}
@@ -48,23 +53,43 @@ public class ClientServerTask extends Task {
 
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				authEndTime = System.currentTimeMillis();
+				authTime = authEndTime - authInitTime;
 				client.sendMessageToServer("CIFRADOLS1");
 			}
 		}
 
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("CIFRADOLS2")) {
 				client.sendMessageToServer("CIFRADOLS1");
 				long queryEndTime = System.currentTimeMillis();
 				long queryTime = queryEndTime - authEndTime;
+				try {
+					crearWriter();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				writer.println(authTime + "," + queryTime);
+				writer.close();
+				writer = null;
 			}
 		}
 		client.sendMessageToServer("EOT");
+	}
+	
+	public void crearWriter() throws Exception {
+		if (writer == null) {
+			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +".csv").exists();
+			BufferedWriter buffer = new BufferedWriter(new FileWriter(
+					Servidor.N_THREADS + "threads" + Generator.numberOfTasks +".csv", true));
+			writer = new PrintWriter(buffer);
+
+			if (noExiste)
+				writer.println("Tiempo autenticacion, Tiempo Consulta");
+		}
+
 	}
 
 	public void fail() {

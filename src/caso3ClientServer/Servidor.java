@@ -4,11 +4,16 @@
 package caso3ClientServer;
 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import caso3Generator.Generator;
 
 
 /**
@@ -52,6 +57,7 @@ public class Servidor   {
 	 * @throws IOException Si el socket no pudo ser creado.
 	 */
 	private ExecutorService executor = Executors.newFixedThreadPool(N_THREADS);
+
 	public static void main(String[] args) throws IOException {
 		elServidor = new Servidor();
 		elServidor.runServidor();
@@ -60,6 +66,7 @@ public class Servidor   {
 	private void runServidor() {
 
 		int num = 0;
+		int fallos = 0;
 		try {
 			// Crea el socket que escucha en el puerto seleccionado.
 			elSocket = new ServerSocket(PUERTO);
@@ -76,6 +83,19 @@ public class Servidor   {
 				num++;
 			}
 		} catch (Exception e) {
+			fallos++;
+			BufferedWriter buffer;
+			try {
+				buffer = new BufferedWriter(new FileWriter(
+						Servidor.N_THREADS + "threads" + Generator.numberOfTasks +"Fallos.txt", true));
+
+				PrintWriter writer = new PrintWriter(buffer);
+				writer.println("Error N°" + fallos + " " + e.getMessage());
+				writer.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 				// No deberia alcanzarse en condiciones normales de ejecucion.
 				e.printStackTrace();
 		}
