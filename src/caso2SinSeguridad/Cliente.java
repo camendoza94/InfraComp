@@ -16,12 +16,14 @@ public class Cliente {
 		try {
 			socket = new Socket(HOST, 4444);
 			escritor = new PrintWriter(socket.getOutputStream(), true);
-			lector = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			lector = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			System.exit(1);
 		}
-		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader stdIn = new BufferedReader(new InputStreamReader(
+				System.in));
 		String fromServer;
 		String fromUser;
 
@@ -31,7 +33,8 @@ public class Cliente {
 			System.out.println("Cliente: " + fromUser);
 			escritor.println(fromUser);
 		}
-		if ((fromServer = lector.readLine()) != null && !fromServer.equals("ERROR")) {
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
 			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				System.out.print("Escriba los algoritmos para enviar:");
@@ -42,30 +45,41 @@ public class Cliente {
 				}
 			}
 		}
-		if ((fromServer = lector.readLine()) != null && !fromServer.equals("ERROR")) {
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
 			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				escritor.println("CERTIFICADOCLIENTE");
 			}
 		}
-		if ((fromServer = lector.readLine()) != null && !fromServer.equals("ERROR")) {
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
 			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("CERTIFICADOSERVIDOR")) {
 				escritor.println("OK");
 			}
 		}
-		
-		if ((fromServer = lector.readLine()) != null && !fromServer.equals("ERROR")) {
+
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
 			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("CIFRADOKC+")) {
 				escritor.println("CIFRADOKS+");
 			}
 		}
-		
-		if ((fromServer = lector.readLine()) != null && !fromServer.equals("ERROR")) {
+
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
 			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				escritor.println("CIFRADOLS1");
+			}
+		}
+		if ((fromServer = lector.readLine()) != null
+				&& !fromServer.equals("ERROR")) {
+			System.out.println("Servidor: " + fromServer);
+			if (fromServer.equals("CIFRADOLS2")) {
+				escritor.println("OK");
 			}
 		}
 		escritor.close();

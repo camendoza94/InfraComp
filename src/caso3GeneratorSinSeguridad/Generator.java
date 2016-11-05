@@ -1,11 +1,10 @@
 /*
  * Decompiled with CFR 0_118.
  */
-package caso3Generator;
+package caso3GeneratorSinSeguridad;
 
 import caso3Core.LoadGenerator;
 import caso3Core.Task;
-import caso3Generator.ClientServerTask;
 
 public class Generator {
     private LoadGenerator generator;
@@ -23,7 +22,7 @@ public class Generator {
     }
 
     public static /* varargs */ void main(String ... args) {
-        new Generator();
+        Generator gen = new Generator();
     }
 }
 

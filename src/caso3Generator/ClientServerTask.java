@@ -26,9 +26,8 @@ import caso3ClientServer.Certificate;
 import caso3ClientServer.Client;
 import caso3Core.Task;
 
-public class ClientServerTask
-extends Task {
-    @Override
+public class ClientServerTask extends Task {
+	@Override
 	public void execute() {
 		Client client = new Client();
 		client.sendMessageToServer("HOLA");
@@ -165,4 +164,3 @@ extends Task {
 		System.out.println("OK_TEST");
 	}
 }
-

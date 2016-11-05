@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
  * 
  * @author Cristian Fabián Brochero Rodríguez-  201620
  */
-public class Server   {
+public class Servidor   {
 
 	/**
 	 * Constante que especifica el tiempo máximo en milisegundos que se esperara 
@@ -43,7 +43,7 @@ public class Server   {
 	 * El socket que permite recibir requerimientos por parte de clientes.
 	 */
 	private static ServerSocket elSocket;
-	private static Server elServidor;
+	private static Servidor elServidor;
 
 	/**
 	 * Metodo main del servidor con seguridad que inicializa un 
@@ -53,7 +53,7 @@ public class Server   {
 	 */
 	private ExecutorService executor = Executors.newFixedThreadPool(N_THREADS);
 	public static void main(String[] args) throws IOException {
-		elServidor = new Server();
+		elServidor = new Servidor();
 		elServidor.runServidor();
 	}
 	
