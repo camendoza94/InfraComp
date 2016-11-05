@@ -58,7 +58,7 @@ public class ClientServerTask extends Task {
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
 			if (fromServer.equals("OK")) {
-				authInitTime = System.currentTimeMillis();
+				authInitTime = System.nanoTime();
 				StringWriter escritorString = new StringWriter();
 				JcaPEMWriter escritorPEM = new JcaPEMWriter(
 						(Writer) escritorString);
@@ -120,7 +120,7 @@ public class ClientServerTask extends Task {
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& fromServer.equals("OK")) {
 			try {
-				authEndTime = System.currentTimeMillis();
+				authEndTime = System.nanoTime();
 				authTime = authEndTime - authInitTime;
 				String algoritmo = (algoritmos[0]);
 				if (algoritmo.equals("DES") || algoritmo.equals("AES"))
@@ -153,12 +153,13 @@ public class ClientServerTask extends Task {
 				String confirmacion = respuesta.startsWith("OK:") ? "OK"
 						: "ERROR";
 				client.sendMessageToServer(confirmacion);
-				long queryEndTime = System.currentTimeMillis();
+				long queryEndTime = System.nanoTime();
 				long queryTime = queryEndTime - authEndTime;
 				crearWriter();
-				writer.println(authTime + "," + queryTime);
-				writer.close();
-				writer = null;
+				synchronized(writer){
+					writer.println(authTime + "," + queryTime);
+					writer.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -169,16 +170,13 @@ public class ClientServerTask extends Task {
 	}
 
 	public void crearWriter() throws Exception {
-		if (writer == null) {
-			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +"SS.csv").exists();
+			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +".csv").exists();
 			BufferedWriter buffer = new BufferedWriter(new FileWriter(
-					Servidor.N_THREADS + "threads" + Generator.numberOfTasks +"SS.csv", true));
+					Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +".csv", true));
 			writer = new PrintWriter(buffer);
 
 			if (noExiste)
 				writer.println("Tiempo autenticacion, Tiempo Consulta");
-		}
-
 	}
 
 	public void fail() {

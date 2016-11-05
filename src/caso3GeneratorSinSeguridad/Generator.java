@@ -8,8 +8,8 @@ import caso3Core.Task;
 
 public class Generator {
     private LoadGenerator generator;
-	private static final int gapBetweenTasks = 1000;
-	public static final int numberOfTasks = 1;
+	private static final int gapBetweenTasks = 100;
+	public static final int numberOfTasks = 80;
 
     public Generator() {
         Task work = this.createTask();

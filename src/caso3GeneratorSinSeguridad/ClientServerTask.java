@@ -33,7 +33,7 @@ public class ClientServerTask extends Task {
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
 			if (fromServer.equals("OK")) {
-				authInitTime = System.currentTimeMillis();
+				authInitTime = System.nanoTime();
 				client.sendMessageToServer("CERTIFICADOCLIENTE");
 			}
 		}
@@ -54,7 +54,7 @@ public class ClientServerTask extends Task {
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
 			if (fromServer.equals("OK")) {
-				authEndTime = System.currentTimeMillis();
+				authEndTime = System.nanoTime();
 				authTime = authEndTime - authInitTime;
 				client.sendMessageToServer("CIFRADOLS1");
 			}
@@ -64,31 +64,30 @@ public class ClientServerTask extends Task {
 				&& !fromServer.equals("ERROR")) {
 			if (fromServer.equals("CIFRADOLS2")) {
 				client.sendMessageToServer("CIFRADOLS1");
-				long queryEndTime = System.currentTimeMillis();
+				long queryEndTime = System.nanoTime();
 				long queryTime = queryEndTime - authEndTime;
 				try {
 					crearWriter();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				writer.println(authTime + "," + queryTime);
-				writer.close();
-				writer = null;
+				synchronized (writer) {
+					writer.println(authTime + "," + queryTime);
+					writer.close();
+				}
 			}
 		}
 		client.sendMessageToServer("EOT");
 	}
 	
 	public void crearWriter() throws Exception {
-		if (writer == null) {
-			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +".csv").exists();
+			boolean noExiste = !new File(Servidor.N_THREADS + "Threads" + Generator.numberOfTasks +"SS.csv").exists();
 			BufferedWriter buffer = new BufferedWriter(new FileWriter(
-					Servidor.N_THREADS + "threads" + Generator.numberOfTasks +".csv", true));
+					Servidor.N_THREADS + "threads" + Generator.numberOfTasks +"SS.csv", true));
 			writer = new PrintWriter(buffer);
 
 			if (noExiste)
 				writer.println("Tiempo autenticacion, Tiempo Consulta");
-		}
 
 	}
 
