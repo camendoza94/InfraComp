@@ -43,15 +43,13 @@ extends Task {
 		SecretKeySpec llaveSimetrica = null;
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
-				client.sendMessageToServer("ALGORITMOS" + alg);
+				client.sendMessageToServer("ALGORITMOS:" + alg);
 			}
 
 		}
 		if ((fromServer = client.waitForMessageFromServer()) != null
 				&& !fromServer.equals("ERROR")) {
-			System.out.println("Servidor: " + fromServer);
 			if (fromServer.equals("OK")) {
 				authInitTime = System.currentTimeMillis();
 				StringWriter escritorString = new StringWriter();
@@ -64,7 +62,6 @@ extends Task {
 					escritorPEM.flush();
 					escritorPEM.close();
 				} catch (IOException e) {
-					System.out.println("No se pudo enviar el certificado");
 				}
 				client.sendMessageToServer(escritorString.toString());
 			}
@@ -91,7 +88,6 @@ extends Task {
 				lectorPEM.close();
 				client.sendMessageToServer("OK");
 			} catch (Exception e) {
-				System.out.println("No se pudo decodificar el certificado");
 			}
 		}
 
@@ -112,7 +108,6 @@ extends Task {
 				client.sendMessageToServer(llave);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("No se pudo decodificar la llave");
 			}
 		}
 		if ((fromServer = client.waitForMessageFromServer()) != null
@@ -120,7 +115,6 @@ extends Task {
 			try {
 				authEndTime = System.currentTimeMillis();
 				long authTime = authEndTime - authInitTime;
-				System.out.println("Servidor: " + fromServer);
 				String algoritmo = (algoritmos[0]);
 				if (algoritmo.equals("DES") || algoritmo.equals("AES"))
 					algoritmo += "/ECB/PKCS5Padding";
@@ -138,7 +132,6 @@ extends Task {
 				client.sendMessageToServer(mensaje + ":" + hash);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("No se pudo codificar el mensaje");
 			}
 		}
 		if ((fromServer = client.waitForMessageFromServer()) != null) {
@@ -152,13 +145,11 @@ extends Task {
 				String respuesta = new String(cipher.doFinal(descifrado));
 				String confirmacion = respuesta.startsWith("OK:") ? "OK"
 						: "ERROR";
-				System.out.println("Servidor: " + respuesta);
 				client.sendMessageToServer(confirmacion);
 				long queryEndTime = System.currentTimeMillis();
 				long queryTime = queryEndTime - authEndTime;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println("No se pudo decodificar la respuesta");
 			}
 
 			client.sendMessageToServer("OK");

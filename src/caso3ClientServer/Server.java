@@ -1,46 +1,84 @@
-/*
- * Decompiled with CFR 0_118.
+/**
+ * 
  */
 package caso3ClientServer;
+
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import caso3ClientServer.ClientThread;
 
-//TODO Mirar la clase Servidor de SerivodorNovasoft y hacer los cambios respectivos
-public class Server {
-    private ServerSocket server;
+/**
+ * Esta clase implementa el servidor que atiende a los clientes. El servidor 
+ * esta implemntado como un pool de threads. Cada vez que un cliente crea
+ * una conexion al servidor, un thread se encarga de atenderlo el tiempo que
+ * dure la sesion. 
+ * Infraestructura Computacional Universidad de los Andes. 
+ * Las tildes han sido eliminadas por cuestiones de compatibilidad.
+ * 
+ * @author Cristian Fabián Brochero Rodríguez-  201620
+ */
+public class Server   {
 
-    public Server() {
-        try {
-            this.server = new ServerSocket(4443);
-        }
-        catch (IOException e) {
-            System.out.println("Fail Opening the Server t Socket: " + e.getMessage());
-        }
-        this.listenClients();
-    }
+	/**
+	 * Constante que especifica el tiempo máximo en milisegundos que se esperara 
+	 * por la respuesta de un cliente en cada una de las partes de la comunicación
+	 */
+	private static final int TIME_OUT = 10000;
 
-    public void listenClients() {
-        System.out.println("Server Running ...");
-        try {
-            do {
-                Socket clientScoket = this.server.accept();
-                System.out.println("Conection Accepted!");
-                ClientThread ct = new ClientThread(clientScoket);
-                ct.start();
-            } while (true);
-        }
-        catch (IOException e) {
-            System.out.println("Fail Connecting to the Client: " + e.getMessage());
-            return;
-        }
-    }
+	/**
+	 * Constante que especifica el numero de threads que se usan en el pool de conexiones.
+	 */
+	public static final int N_THREADS = 1;
 
-    public static /* varargs */ void main(String ... args) {
-        new Server();
-    }
+	/**
+	 * Puerto en el cual escucha el servidor. 
+	 |*/
+	public static final int PUERTO = 4443;
+
+	/**
+	 * El socket que permite recibir requerimientos por parte de clientes.
+	 */
+	private static ServerSocket elSocket;
+	private static Server elServidor;
+
+	/**
+	 * Metodo main del servidor con seguridad que inicializa un 
+	 * pool de threads determinado por la constante nThreads.
+	 * @param args Los argumentos del metodo main (vacios para este ejemplo).
+	 * @throws IOException Si el socket no pudo ser creado.
+	 */
+	private ExecutorService executor = Executors.newFixedThreadPool(N_THREADS);
+	public static void main(String[] args) throws IOException {
+		elServidor = new Server();
+		elServidor.runServidor();
+	}
+	
+	private void runServidor() {
+
+		int num = 0;
+		try {
+			// Crea el socket que escucha en el puerto seleccionado.
+			elSocket = new ServerSocket(PUERTO);
+			System.out.println("Servidor Coordinador escuchando en puerto: " + PUERTO);
+			while (true) {
+				Socket sThread = null;
+				// ////////////////////////////////////////////////////////////////////////
+				// Recibe conexiones de los clientes
+				// ////////////////////////////////////////////////////////////////////////
+				sThread = elSocket.accept();
+				sThread.setSoTimeout(TIME_OUT);
+				System.out.println("Thread " + num + " recibe a un cliente.");
+				executor.submit(new Worker(num,sThread));
+				num++;
+			}
+		} catch (Exception e) {
+				// No deberia alcanzarse en condiciones normales de ejecucion.
+				e.printStackTrace();
+		}
+	}
 }
 

@@ -12,7 +12,7 @@ public class Generator {
 
     public Generator() {
         Task work = this.createTask();
-        int numberOfTasks = 10;
+        int numberOfTasks = 1;
         int gapBetweenTasks = 1000;
         this.generator = new LoadGenerator("Client - Server Load Test", numberOfTasks, work, gapBetweenTasks);
         this.generator.generate();

@@ -1,4 +1,4 @@
-package ServidorNovasoft;
+package caso3ClientServer;
 
 import java.awt.FontFormatException;
 import java.io.BufferedReader;

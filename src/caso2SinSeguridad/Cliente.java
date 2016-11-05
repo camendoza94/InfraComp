@@ -4,12 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.Socket;
-import java.sql.Date;
 
 public class Cliente {
 	public static final String HOST = "localhost";
@@ -29,7 +24,6 @@ public class Cliente {
 		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 		String fromServer;
 		String fromUser;
-		String[] algoritmos = null;
 
 		System.out.print("Escriba el mensaje para enviar:");
 		fromUser = stdIn.readLine();
@@ -43,7 +37,6 @@ public class Cliente {
 				System.out.print("Escriba los algoritmos para enviar:");
 				fromUser = stdIn.readLine();
 				if (fromUser != null) {
-					algoritmos = fromUser.split(":");
 					System.out.println("ALGORITMOS:" + fromUser);
 					escritor.println("ALGORITMOS:" + fromUser.trim());
 				}
